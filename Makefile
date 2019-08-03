@@ -5,4 +5,6 @@ help: ## displays the description of each target (Default)
 .PHONY: help
 
 build: ## build the project
-	@printf '[INFO] Build \n'
+	@printf '[INFO] Build\n'
+
+test: build
