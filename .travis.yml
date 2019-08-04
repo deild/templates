@@ -3,10 +3,11 @@ stages:
   - test
   - name: 'deploy pages'
     if: branch = master
-  - name: 'deploy release'
+  - name: 'deploy releases'
     if: tag IS present
 script:
   - make test
+after_success:
   - mkdir -p public
   - touch public/index.html
   - echo 'hello from template' > public/index.html
@@ -22,13 +23,15 @@ jobs:
         local_dir: public
         on:
           branch: master
-    - stage: 'deploy release'
+    - stage: 'deploy releases'
       before_deploy:
+        - printf '# Release Notes\n\n' > BODY.md
         - if [[ $(git tag -l '*' | wc -l) == "1" ]]; then
-            export BODY="See [changelog](https://github.com/deild/travisci/commits/$TRAVIS_TAG)";
+            echo "See [Changelog](https://github.com/deild/templates/commits/$TRAVIS_TAG)" >> BODY.md;
           else
-            export BODY="See [changelog](https://github.com/deild/travisci/compare/$(git tag -l '*' | tail -n2 | head -n1)...$TRAVIS_TAG)";
+            echo "See [Changelog](https://github.com/deild/templates/compare/$(git tag -l '*' | tail -n2 | head -n1)...$TRAVIS_TAG)" >> BODY.md;
           fi
+        - export BODY=$(<BODY.md)
         - tar -czf www.tar.xz public/index.html
         - sha256sum www.tar.xz > www.tar.xz.sha256
       deploy:
