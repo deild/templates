@@ -43,5 +43,5 @@ jobs:
         skip_cleanup: true
         body: $BODY
         on:
-          repo: deild/travisci
+          repo: deild/templates
           tags: true
