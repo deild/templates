@@ -7,7 +7,6 @@ stages:
     if: tag IS present
 script:
   - make test
-before_deploy:
   - mkdir -p public
   - touch public/index.html
   - echo 'hello from template' > public/index.html
